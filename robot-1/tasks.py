@@ -2,6 +2,7 @@ from robocorp.tasks import task
 from robocorp import browser, http
 from RPA.Tables import Tables
 from RPA.PDF import PDF
+from RPA.Archive import Archive
 
 @task
 def order_robots_from_RobotSpareBin():
@@ -24,6 +25,14 @@ def order_robots_from_RobotSpareBin():
         final_pdf = embed_screenshot_to_receipt(ss_path, pdf_path)
         browser.page().click("#order-another")
         close_popup()
+    archive_receipts()
+
+def archive_receipts():
+    archive = Archive()
+    archive.archive_folder_with_zip(
+        folder="output/receipts",
+        archive_name="output/receipts.zip"
+    )
 
 def embed_screenshot_to_receipt(screenshot, pdf_file):
     pdf = PDF()
