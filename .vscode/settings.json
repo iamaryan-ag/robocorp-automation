@@ -1,0 +1,6 @@
+{
+  "python.analysis.extraPaths": [
+    "c:/Users/iamar/Documents/College/Code/Automations/robot-1/."
+  ],
+  "python.terminal.activateEnvironment": false
+}
