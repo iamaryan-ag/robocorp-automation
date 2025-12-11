@@ -19,20 +19,34 @@ def order_robots_from_RobotSpareBin():
         fill_form(order)
         click_preview()
         submit_order()
-        store_receipt_as_pdf(order["Order number"])
+        ss_path = screenshot_robot(order["Order number"])
+        pdf_path = store_receipt_as_pdf(order["Order number"])
+        final_pdf = embed_screenshot_to_receipt(ss_path, pdf_path)
         browser.page().click("#order-another")
+        close_popup()
+
+def embed_screenshot_to_receipt(screenshot, pdf_file):
+    pdf = PDF()
+    output_path = pdf_file
+    pdf.add_watermark_image_to_pdf(
+        image_path=screenshot,
+        source_path=pdf_file,
+        output_path=output_path
+    )
+    return output_path
 
 def screenshot_robot(order_number):
     page = browser.page()
     robot_img = page.locator("#robot-preview-image")
-    robot_img.screenshot(path=f"output/screenshots/robot_{order_number}")
+    robot_img.screenshot(path=f"output/screenshots/robot_{order_number}.png")
+    return f"output/screenshots/robot_{order_number}.png"
 
 def store_receipt_as_pdf(order_number):
     page = browser.page()
     pdf = PDF()
     receipt_html = page.locator("#receipt").inner_html()
-    pdf_path = pdf.html_to_pdf(receipt_html, f"output/receipts/receipt_{order_number}")
-    return pdf_path
+    pdf.html_to_pdf(receipt_html, f"output/receipts/receipt_{order_number}.pdf")
+    return f"output/receipts/receipt_{order_number}.pdf"
 
 def click_preview():
     page = browser.page()
